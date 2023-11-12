@@ -71,6 +71,14 @@ print(
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
     future_to_result = {}
+    if I.tangle:
+        future_to_result.update(
+            {
+                executor.submit(knit.tangle, f, I): ("tangled", f, None)
+                for f in files
+                if I.tangle == True or any([fnmatch(f, glob) for glob in I.tangle])
+            }
+        )
     if I.export:
         future_to_result.update(
             {
@@ -82,14 +90,6 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
                 ): ("exported", f, form)
                 for f in files
                 for form in I.export
-            }
-        )
-    if I.tangle:
-        future_to_result.update(
-            {
-                executor.submit(knit.tangle, f, I): ("tangled", f, None)
-                for f in files
-                if I.tangle == True or any([fnmatch(f, glob) for glob in I.tangle])
             }
         )
 
