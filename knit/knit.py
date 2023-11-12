@@ -77,4 +77,4 @@ def export(f, mode, I: Inputs):
     if out.startswith("Debugger entered--Lisp error"):
         raise RuntimeError(out)
 
-    return out
+    return out + r.stdout.decode().rstrip()
